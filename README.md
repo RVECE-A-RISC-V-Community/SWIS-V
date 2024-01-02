@@ -2,7 +2,7 @@
 ```
 make init
 ```
-This instals iverilog and gtkwave required to run the simulations.
+This installs iverilog and gtkwave required to run the simulations
 
 ## A Single Cycle RISC-V core supporting RV32I Instruction Set
 
@@ -25,12 +25,12 @@ This removes .vvp files, log files, and waveform outputs.
 ## File Structure
 
 RTL Directory (rtl/):
-	Contains the main Verilog design file: top_module.v.
+	Contains the main Verilog design files.
 
 Test Bench Directory (test_bench/):
-	Includes the test bench for top_module.v: tb_top_module.v.
+	Includes the test bench for all the verilog files.
 
 Programs Directory (programs/):
-	Contains the Python script (align.py) for aligning memory to Little Endian, assembly programs to test the core and their instruction code files.
+	Contains the Python script (align.py) for aligning the instruction code to Little Endian and the assembly programs to test the core and their instruction code files.
 
 
