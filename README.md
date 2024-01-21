@@ -12,7 +12,7 @@ make core
 This target cleans log files, aligns memory to Little Endian using a Python script, compiles Verilog files specified in rtl/top_module.v and test_bench/tb_top_module.v, generates a waveform, and opens it using gtkwave.
 
 ```
-make compile
+make TB=test_bench/test_bench_file.v DESIGN=rtl/design_file.v compile
 ```
 Use this target if you only want to compile a Verilog file with a test-bench.
 
