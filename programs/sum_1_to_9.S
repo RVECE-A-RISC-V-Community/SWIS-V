@@ -1,13 +1,3 @@
-# Add 1,2,3,...,9 (in that order).
-# Store incremental results in memory locations 0..9. (1, 3, 6, 10, ...)
-#
-# Regs:
-# t0: cnt
-# a2: ten
-# a0: out
-# t1: final value
-# a1: expected result
-# t2: store addr
 reset:
    ORI t2, zero, 0          #     store_addr = 0
    ORI t0, zero, 1          #     cnt = 1
@@ -29,4 +19,3 @@ fail:
    ADD a1, a1, zero         #     nop fail
 pass:
    ADD t1, t1, zero         #     nop pass
-
