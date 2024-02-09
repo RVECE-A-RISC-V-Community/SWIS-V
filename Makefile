@@ -36,9 +36,9 @@ core: memory.out
 	
 memory.out:
 	@echo "Compiling the program file..."
-	./riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-as -o programs/program.o programs/$(program)
-	./riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-objdump -d programs/program.o > programs/$(program).dis
-	./riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-objdump -d programs/program.o | grep -P '^\s+\d+:' | awk '{print $$2}' > programs/memory.out
+	./riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-as -march=rv32i -mabi=ilp32 -o programs/program.o programs/$(program)
+	./riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-objdump -M no-aliases -M numeric -d programs/program.o > programs/$(program).dis
+	./riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-objdump -M no-aliases -M numeric -d programs/program.o | grep -P '^\s+\w+:' | awk '{print $$2}' > programs/memory.out
 
 compile: $(TB) $(DESIGN)
 	@echo "Compiling Verilog files..."

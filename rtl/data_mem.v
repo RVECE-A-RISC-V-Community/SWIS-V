@@ -43,14 +43,17 @@ assign o_rd_ack = ~rst_n ? 1'b0 : 1'b1;
 assign o_read_data = (rst_n & i_stb) ? {memory[i_addr+3],memory[i_addr+2],memory[i_addr+1],memory[i_addr]} : 32'd0;
 
 //only for simulation
-always @(posedge i_stb)
+always @(posedge clk)
 begin
-    		fd = $fopen("data_memory.log","ab+");
+	if(i_stb)
+	begin
+		fd = $fopen("data_memory.log","ab+");
     		if( (i_addr & 2'b11) != 2'b00 ) begin
 			$display("\nDATA MEMORY: Address %h is not 4-byte aligned!",i_addr);
 		end 	
     		$fdisplay(fd, "Data 0x%h Read from address 0x%h", {memory[i_addr+3],memory[i_addr+2],memory[i_addr+1],memory[i_addr]}, i_addr);
 		$fclose(fd);
+	end
 end 
 /*
 always @(*)
