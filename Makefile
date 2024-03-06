@@ -28,21 +28,6 @@ init:
 		tar -zxvf riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz; \
 	fi
 	
-	@if [ -e riscv-isa-sim ]; then \
-		echo "riscv-isa-sim already exists. Skipping git clone"; \
-	else \
-		echo "Cloning riscv-isa-sim..."; \
-		git clone https://github.com/riscv-software-src/riscv-isa-sim.git; \
-	fi
-	cd riscv-isa-sim; \
-	sudo apt-get install device-tree-compiler; \
-	mkdir build; \
-	cd build; \
-	../configure --prefix=$(pwd)/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14; \
-	make; \
-	sudo make install; \
-
-	
 	
 
 core: memory.out 
