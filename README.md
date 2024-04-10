@@ -1,18 +1,18 @@
-## Initialization
+# Initialization
 ```
 make init
 ```
-This installs iverilog and gtkwave required to run the simulations
+This installs required tools to run the core
 
 ## A Single Cycle RISC-V core supporting RV32I Instruction Set
 
 ```
-make core
+make core TEST_PROGRAM=<your_test_name>
 ```
-This target cleans log files, aligns memory to Little Endian using a Python script, compiles Verilog files specified in rtl/top_module.v and test_bench/tb_top_module.v, generates a waveform, and opens it using gtkwave.
+Executes the program test.S by default. Custom tests must be put under program directory.
 
 ```
-make TB=test_bench/test_bench_file.v DESIGN=rtl/design_file.v compile
+make compile TB=<test_bench_name> DESIGN=<module_name>
 ```
 Use this target if you only want to compile a Verilog file with a test-bench.
 
@@ -33,4 +33,5 @@ Test Bench Directory (test_bench/):
 Programs Directory (programs/):
 	Contains the Python script (align.py) for aligning the instruction code to Little Endian and the assembly programs to test the core and their instruction code files.
 
-
+Tools Directory (tools/):
+	Contains the .sh script to install the tools and tools required to run the simulation.
