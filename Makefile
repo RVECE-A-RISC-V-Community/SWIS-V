@@ -1,62 +1,44 @@
 # Variables
 RTL_DIR := rtl/
+PROGRAMS_DIR := programs/
+TESTBENCH_DIR := test_bench/
+TEST_PROGRAM := test
+PYTHON_SCRIPT := programs/extract.py
+
 VERILOG_FILE := rtl/top_module.v
 TEST_BENCH := test_bench/tb_top_module.v
-MEM_FILE := programs/memory.out
-PYTHON_SCRIPT := programs/align.py
-WAVEFORM_VIEWER := gtkwave
 
 # Targets
-all: init core
-
 init:
-	@echo "Initializing..."
-	sudo apt update
-	sudo apt install -y iverilog gtkwave
-	
-	@if [ -e riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz ]; then \
-		echo "riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz already exists. Skipping wget"; \
-	else \
-		echo "Downloading RISCV-GCC toolchain.."; \
-		wget https://static.dev.sifive.com/dev-tools/freedom-tools/v2020.12/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz; \
-	fi
-	
-	@if [ -e riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14 ]; then \
-		echo "riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14 already exists. Skipping tar"; \
-	else \
-		echo "Extracting RISCV-GCC toolchain.."; \
-		tar -zxvf riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz; \
-	fi
-	
-	
-
-core: memory.out 
+	bash tools/install_tools.sh
+		
+core: $(PROGRAMS_DIR)memory.hex
 	@echo "Cleaning the log files..."
-	rm -f output.vvp waveform.vcd core.vvp *_tb.vvp *.log
-	@echo "Aligning the Memory to Little Endian..."
-	python3 $(PYTHON_SCRIPT)	
+	@echo "Dividing the memory file into instructon memory and data memory file"
+	python3 $(PYTHON_SCRIPT)
+	@echo "Executing The Program on Spike..."
+	spike --log-commits --log  $(TEST_PROGRAM)_spike.dump --isa=rv32i $(PROGRAMS_DIR)$(TEST_PROGRAM).elf
 	@echo "Compiling Verilog files..."
 	iverilog -o output.vvp $(TEST_BENCH) $(VERILOG_FILE)
 	vvp output.vvp
 	@echo "Generating waveform..."
-	gtkwave waveform.vcd &
+	#gtkwave waveform.vcd &
 	
-memory.out:
-	@echo "Compiling the program file..."
-	./riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-as -march=rv32i -mabi=ilp32 -o programs/program.o programs/$(program)
-	./riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-objdump -M no-aliases -M numeric -d programs/program.o > programs/$(program).dis
-	./riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin/riscv64-unknown-elf-objdump -M no-aliases -M numeric -d programs/program.o | grep -P '^\s+\w+:' | awk '{print $$2}' > $(MEM_FILE) 
-
-compile: $(TB) $(DESIGN)
+$(PROGRAMS_DIR)memory.hex:
+	rm -f *.vvp *.log *.vcd $(PROGRAMS_DIR)*.elf $(PROGRAMS_DIR)*.hex $(PROGRAMS_DIR)*.dis $(PROGRAMS_DIR)*.dump $(PROGRAMS_DIR)*.mem
+	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles -T $(PROGRAMS_DIR)linker.ld $(PROGRAMS_DIR)$(TEST_PROGRAM).S -o $(PROGRAMS_DIR)$(TEST_PROGRAM).elf
+	riscv64-unknown-elf-objdump -D $(PROGRAMS_DIR)$(TEST_PROGRAM).elf > $(PROGRAMS_DIR)$(TEST_PROGRAM).dis
+	riscv64-unknown-elf-objcopy -O verilog $(PROGRAMS_DIR)$(TEST_PROGRAM).elf $(PROGRAMS_DIR)memory.hex
+	
+compile: $(TESTBENCH_DIR)$(TB).v $(RTL_DIR)$(DESIGN).v
 	@echo "Compiling Verilog files..."
-	iverilog -o output.vvp $(TB) $(DESIGN)
+	iverilog -o output.vvp $(TESTBENCH_DIR)$(TB).v $(RTL_DIR)$(DESIGN).v
 	vvp output.vvp
 	@echo "Generating waveform..."
-	gtkwave waveform.vcd
+	gtkwave waveform.vcd &
 
 clean:
 	@echo "Cleaning up..."
-	rm -f *.vvp *.log *.vcd
+	rm -f *.vvp *.log *.vcd $(PROGRAMS_DIR)*.elf $(PROGRAMS_DIR)*.hex $(PROGRAMS_DIR)*.dis *.dump $(PROGRAMS_DIR)*.mem
 
 .PHONY: all core compile clean
-
