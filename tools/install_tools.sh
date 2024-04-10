@@ -1,5 +1,5 @@
 echo "Initializing..."
-export PROJ := "$PWD"
+export PROJ="$PWD"
 sudo apt update
 sudo apt install -y iverilog gtkwave
 sudo apt install libmpc3 device-tree-compiler
