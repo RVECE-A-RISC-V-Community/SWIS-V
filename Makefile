@@ -16,13 +16,15 @@ core: $(PROGRAMS_DIR)$(TEST_PROGRAM).dis
 	@echo "Cleaning the log files..."
 	@echo "Dividing the memory file into instructon memory and data memory file"
 	python3 $(PYTHON_SCRIPT)
-	@echo "Executing The Program on Spike..."
-	spike --log-commits --log  $(TEST_PROGRAM)_spike.dump --isa=rv32i $(PROGRAMS_DIR)$(TEST_PROGRAM).elf
 	@echo "Compiling Verilog files..."
 	iverilog -o output.vvp $(TEST_BENCH) $(VERILOG_FILE)
 	vvp output.vvp
 	@echo "Generating waveform..."
 	#gtkwave waveform.vcd &
+	
+	@echo "Executing The Program on Spike..."
+	spike --log-commits --log  $(TEST_PROGRAM)_spike.dump --isa=rv32i $(PROGRAMS_DIR)$(TEST_PROGRAM).elf
+	
 	
 $(PROGRAMS_DIR)$(TEST_PROGRAM).dis:
 	rm -f *.vvp *.log *.vcd $(PROGRAMS_DIR)*.elf $(PROGRAMS_DIR)*.hex $(PROGRAMS_DIR)*.dis $(PROGRAMS_DIR)*.dump $(PROGRAMS_DIR)*.mem
