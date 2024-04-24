@@ -15,6 +15,8 @@
 `define JR 7'b1100111
 `define U  7'b0110111
 `define UPC 7'b0010111
+`define CSR 7'b1110011
+`define FENCE 7'b0001111
 
 // ALU Control Signals
 `define ADD 4'b0000
@@ -58,3 +60,37 @@
 `define SRAI 3'b101 
 `define ORI 3'b110
 `define ANDI 3'b111
+
+
+//func3 for CSR Instructions
+`define CSRRW 3'b001
+`define CSRRS 3'b010
+`define CSRRC 3'b011
+`define CSRRWI 3'b101
+`define CSRRSI 3'b110
+`define CSRRCI 3'b111
+
+//func7 for CSR-ECALL/EBREAK
+`define ECALL 7'b0000000
+`define EBREAK 7'b0000001
+
+//// M-mode CSRs ////
+//Machine-info
+`define MVENDORID 12'hF11
+`define MARCHID 12'hF12
+`define MHARTID 12'hF14
+//Machine Trap Setup
+`define MSTATUS 12'h300
+`define MISA 12'h301
+`define MIE 12'h304
+`define MTVEC 12'h305
+//Machine Trap Handling
+`define MSCRATCH 12'h340
+`define MEPC 12'h341
+`define MCAUSE 12'h342
+`define MTVAL 12'h343
+`define MIP 12'h344
+//Machine Counter/Timer
+`define MCYCLE 12'hB00
+`define MCYCLEH 12'hB80
+
