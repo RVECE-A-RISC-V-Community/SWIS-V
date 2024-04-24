@@ -92,7 +92,7 @@ module tb_alu;
     #10;
 
     // Test SLTU operation
-    i_op1 = -20;
+    i_op1 = 32'd10;
     i_op2 = 32'd10;
     i_alu_ctrl = `SLTU;
     #10;
@@ -104,7 +104,7 @@ module tb_alu;
     #10;
     
     // Test EQ operation
-    i_op1 = 32'd10;
+    i_op1 = 32'd20;
     i_op2 = 32'd20;
     i_alu_ctrl = `EQ;
     #10;
@@ -128,10 +128,10 @@ module tb_alu;
     #10;
     
     // Test GEU operation
-    i_op1 = -100;
+    i_op1 = 32'b10;
     i_op2 = 32'd30;
     i_alu_ctrl = `GEU;
-    #10;
+    #1000;
 
     // Finish simulation
     $finish;

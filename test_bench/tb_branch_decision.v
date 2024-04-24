@@ -22,7 +22,7 @@ module tb_branch_decision;
 
    // Initial values
    initial begin
-      i_result = 1'b0;
+      i_result = 1'b1;
       i_func3 = 3'b000; // Initializing with BEQ condition
       #10; // Wait for 10 time units
       $dumpfile("waveform.vcd");
@@ -57,9 +57,9 @@ module tb_branch_decision;
       // Case 6: BGEU condition
       i_result = 1'b1;
       i_func3 = 3'b111;
-      #10; // Wait for 10 time units
-
-      $finish; // End simulation
+      #1000;
+      $finish;
+      
    end
 
 endmodule

@@ -2,7 +2,7 @@
 RTL_DIR := rtl/
 PROGRAMS_DIR := programs/
 TESTBENCH_DIR := test_bench/
-TEST_PROGRAM := test
+TEST := test
 PYTHON_SCRIPT := programs/extract.py
 
 VERILOG_FILE := rtl/top_module.v
@@ -12,7 +12,7 @@ TEST_BENCH := test_bench/tb_top_module.v
 init:
 	bash tools/install_tools.sh
 		
-core: $(PROGRAMS_DIR)$(TEST_PROGRAM).dis
+core: $(PROGRAMS_DIR)$(TEST).S $(PROGRAMS_DIR)$(TEST).dis
 	@echo "Cleaning the log files..."
 	@echo "Dividing the memory file into instructon memory and data memory file"
 	python3 $(PYTHON_SCRIPT)
@@ -23,14 +23,20 @@ core: $(PROGRAMS_DIR)$(TEST_PROGRAM).dis
 	#gtkwave waveform.vcd &
 	
 	@echo "Executing The Program on Spike..."
-	spike --log-commits --log  $(TEST_PROGRAM)_spike.dump --isa=rv32i $(PROGRAMS_DIR)$(TEST_PROGRAM).elf
+	spike --log-commits --log  $(TEST)_spike.dump --isa=rv32i $(PROGRAMS_DIR)$(TEST).elf
 	
 	
-$(PROGRAMS_DIR)$(TEST_PROGRAM).dis:
+$(PROGRAMS_DIR)$(TEST).S:
 	rm -f *.vvp *.log *.vcd $(PROGRAMS_DIR)*.elf $(PROGRAMS_DIR)*.hex $(PROGRAMS_DIR)*.dis $(PROGRAMS_DIR)*.dump $(PROGRAMS_DIR)*.mem
-	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles -T $(PROGRAMS_DIR)linker.ld $(PROGRAMS_DIR)$(TEST_PROGRAM).S -o $(PROGRAMS_DIR)$(TEST_PROGRAM).elf
-	riscv64-unknown-elf-objdump -D $(PROGRAMS_DIR)$(TEST_PROGRAM).elf > $(PROGRAMS_DIR)$(TEST_PROGRAM).dis
-	riscv64-unknown-elf-objcopy -O verilog $(PROGRAMS_DIR)$(TEST_PROGRAM).elf $(PROGRAMS_DIR)memory.hex
+	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles -T $(PROGRAMS_DIR)linker.ld $(PROGRAMS_DIR)$(TEST).S -o $(PROGRAMS_DIR)$(TEST).elf
+	riscv64-unknown-elf-objdump -D $(PROGRAMS_DIR)$(TEST).elf > $(PROGRAMS_DIR)$(TEST).dis
+	riscv64-unknown-elf-objcopy -O verilog $(PROGRAMS_DIR)$(TEST).elf $(PROGRAMS_DIR)memory.hex
+	
+$(PROGRAMS_DIR)$(TEST).dis:
+	rm -f *.vvp *.log *.vcd $(PROGRAMS_DIR)*.elf $(PROGRAMS_DIR)*.hex $(PROGRAMS_DIR)*.dis $(PROGRAMS_DIR)*.dump $(PROGRAMS_DIR)*.mem
+	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles -T $(PROGRAMS_DIR)linker.ld $(PROGRAMS_DIR)$(TEST).S -o $(PROGRAMS_DIR)$(TEST).elf
+	riscv64-unknown-elf-objdump -D $(PROGRAMS_DIR)$(TEST).elf > $(PROGRAMS_DIR)$(TEST).dis
+	riscv64-unknown-elf-objcopy -O verilog $(PROGRAMS_DIR)$(TEST).elf $(PROGRAMS_DIR)memory.hex
 	
 compile: $(TESTBENCH_DIR)$(TB).v $(RTL_DIR)$(DESIGN).v
 	@echo "Compiling Verilog files..."
