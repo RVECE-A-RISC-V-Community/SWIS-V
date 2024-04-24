@@ -34,7 +34,7 @@ always @(*)
 begin
     case(i_func3)
         `BEQ:begin
-                 if(i_result[0] == 1'd1)
+                 if(i_result[0] == 1'd1) 	
                     o_branch = 1'b1;
                  else
                     o_branch = 1'b0;
