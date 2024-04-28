@@ -16,6 +16,13 @@ core: $(PROGRAMS_DIR)$(TEST).S $(PROGRAMS_DIR)$(TEST).dis
 	@echo "Cleaning the log files..."
 	@echo "Dividing the memory file into instructon memory and data memory file"
 	python3 $(PYTHON_SCRIPT)
+
+	@echo "Configuring RTL..."
+	DATA_MEM_ADDRESS=$$(grep -m 1 -oP '(?<=@)[0-9A-F]+' programs/memory.hex); \
+	INSTR_MEM_ADDRESS=$$(grep -m 2 -oP '(?<=@)[0-9A-F]+' programs/memory.hex | tail -n 1); \
+	sed -i "s/\`define PC_RESET .*/\`define PC_RESET 32'h$$INSTR_MEM_ADDRESS/" rtl/parameters.vh; \
+	sed -i "s/\`define DATA_START .*/\`define DATA_START 32'h$$DATA_MEM_ADDRESS/" rtl/parameters.vh
+
 	@echo "Compiling Verilog files..."
 	iverilog -o output.vvp $(TEST_BENCH) $(VERILOG_FILE)
 	vvp output.vvp

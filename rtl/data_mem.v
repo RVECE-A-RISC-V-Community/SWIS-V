@@ -34,7 +34,7 @@ output wire o_rd_ack,
 output wire [31:0] o_read_data
 );
 
-reg [7:0] memory[0:`MEM_DEPTH-1]; // byte adressable
+reg [7:0] memory[`DATA_START + `DATA_MEM_SIZE : `DATA_START]; // byte adressable
 
 integer fd;
 
