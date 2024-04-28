@@ -36,13 +36,13 @@ core: $(PROGRAMS_DIR)$(TEST).S $(PROGRAMS_DIR)$(TEST).dis
 $(PROGRAMS_DIR)$(TEST).S:
 	rm -f *.vvp *.log *.vcd $(PROGRAMS_DIR)*.elf $(PROGRAMS_DIR)*.hex $(PROGRAMS_DIR)*.dis $(PROGRAMS_DIR)*.dump $(PROGRAMS_DIR)*.mem
 	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles -T $(PROGRAMS_DIR)linker.ld $(PROGRAMS_DIR)$(TEST).S -o $(PROGRAMS_DIR)$(TEST).elf
-	riscv64-unknown-elf-objdump -D $(PROGRAMS_DIR)$(TEST).elf > $(PROGRAMS_DIR)$(TEST).dis
+	riscv64-unknown-elf-objdump -M no-aliases -M numeric -D $(PROGRAMS_DIR)$(TEST).elf > $(PROGRAMS_DIR)$(TEST).dis
 	riscv64-unknown-elf-objcopy -O verilog $(PROGRAMS_DIR)$(TEST).elf $(PROGRAMS_DIR)memory.hex
 	
 $(PROGRAMS_DIR)$(TEST).dis:
 	rm -f *.vvp *.log *.vcd $(PROGRAMS_DIR)*.elf $(PROGRAMS_DIR)*.hex $(PROGRAMS_DIR)*.dis $(PROGRAMS_DIR)*.dump $(PROGRAMS_DIR)*.mem
 	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles -T $(PROGRAMS_DIR)linker.ld $(PROGRAMS_DIR)$(TEST).S -o $(PROGRAMS_DIR)$(TEST).elf
-	riscv64-unknown-elf-objdump -D $(PROGRAMS_DIR)$(TEST).elf > $(PROGRAMS_DIR)$(TEST).dis
+	riscv64-unknown-elf-objdump -M no-aliases -M numeric -D $(PROGRAMS_DIR)$(TEST).elf > $(PROGRAMS_DIR)$(TEST).dis
 	riscv64-unknown-elf-objcopy -O verilog $(PROGRAMS_DIR)$(TEST).elf $(PROGRAMS_DIR)memory.hex
 	
 compile: $(TESTBENCH_DIR)$(TB).v $(RTL_DIR)$(DESIGN).v
