@@ -1,9 +1,15 @@
 `define N 32
-`define INSTR_MEM_SIZE 4000 //in bytes
-`define PC_RESET 32'h00000000
 `define NOP 32'h00000013 // addi x0,x0,0
-`define MEM_DEPTH 32768
-`define SIM 0
+`define SIM 
+
+// Instruction Memory
+`define INSTR_MEM_SIZE 20'h1000 //in bytes
+`define PC_RESET 32'h80004000
+
+// Data Memory
+`define DATA_MEM_SIZE 20'h1000 //in bytes
+`define DATA_START 32'h80002000
+
 
 // Opcodes
 `define R  7'b0110011
@@ -90,7 +96,4 @@
 `define MCAUSE 12'h342
 `define MTVAL 12'h343
 `define MIP 12'h344
-//Machine Counter/Timer
-`define MCYCLE 12'hB00
-`define MCYCLEH 12'hB80
 
