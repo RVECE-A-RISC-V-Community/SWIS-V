@@ -46,6 +46,13 @@ wire is_stall = !i_imem_ack & rst_n;
 wire [31:0] is_pc_increment;
 reg [31:0] pc;
 
+
+//only for simulation
+`ifdef SIM
+integer fd;
+`endif
+
+
 assign is_pc_increment = i_boj ? i_imm : ( is_stall ? 32'd0 : 32'd4 );
 assign o_pc = pc;
 
@@ -86,5 +93,20 @@ begin
 		o_instr = i_inst;
 	end
 end
+
+//only for simulation
+`ifdef SIM
+always @(o_pc,o_instr)
+begin	
+	#2
+	if(rst_n & o_imem_stb)
+	begin
+		fd = $fopen("IF_log.csv","ab+");
+		$fwrite(fd,"%h,%h\n",o_pc,o_instr);
+		$fclose(fd);
+	end
+end
+
+`endif
 
 endmodule

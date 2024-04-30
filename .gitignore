@@ -3,6 +3,7 @@
 *.log
 *.gz
 *.dump
+*.csv
 riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14
 riscv-isa-sim
 riscv-pk
