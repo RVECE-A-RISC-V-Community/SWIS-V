@@ -2,8 +2,8 @@
 RTL_DIR := rtl/
 PROGRAMS_DIR := programs/
 TESTBENCH_DIR := test_bench/
+TOOLS_DIR :=  tools/
 TEST := test
-PYTHON_SCRIPT := programs/extract.py
 
 VERILOG_FILE := rtl/top_module.v
 TEST_BENCH := test_bench/tb_top_module.v
@@ -13,9 +13,8 @@ init:
 	bash tools/install_tools.sh
 		
 core: $(PROGRAMS_DIR)$(TEST).S $(PROGRAMS_DIR)$(TEST).dis
-	@echo "Cleaning the log files..."
 	@echo "Dividing the memory file into instructon memory and data memory file"
-	python $(PYTHON_SCRIPT)
+	python $(TOOLS_DIR)extract.py
 
 	@echo "Configuring RTL..."
 	DATA_MEM_ADDRESS=$$(grep -m 1 -oP '(?<=@)[0-9A-F]+' programs/memory.hex); \
@@ -41,18 +40,20 @@ core: $(PROGRAMS_DIR)$(TEST).S $(PROGRAMS_DIR)$(TEST).dis
 	@echo "Converting spike log to csv format..."
 	python tools/spike_log_to_trace_csv.py -f --log spike.log --csv spike.csv
 	@echo "Converting ABI Names to Numeric Names in CSV file..."
-	python tools/register_remapping.py 
+	python $(TOOLS_DIR)register_remapping.py 
 	
 	@echo "Comparing RTL and Spike Traces..."
-	python tools/compare.py
+	python $(TOOLS_DIR)compare.py
 	
 $(PROGRAMS_DIR)$(TEST).S:
+	@echo "Cleaning the log files..."
 	rm -f *.vvp *.log *.vcd *.csv $(PROGRAMS_DIR)*.elf $(PROGRAMS_DIR)*.hex $(PROGRAMS_DIR)*.dis $(PROGRAMS_DIR)*.dump $(PROGRAMS_DIR)*.mem
 	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles -T $(PROGRAMS_DIR)linker.ld $(PROGRAMS_DIR)$(TEST).S -o $(PROGRAMS_DIR)$(TEST).elf
 	riscv64-unknown-elf-objdump -M no-aliases -M numeric -D $(PROGRAMS_DIR)$(TEST).elf > $(PROGRAMS_DIR)$(TEST).dis
 	riscv64-unknown-elf-objcopy -O verilog $(PROGRAMS_DIR)$(TEST).elf $(PROGRAMS_DIR)memory.hex
 	
 $(PROGRAMS_DIR)$(TEST).dis:
+	@echo "Cleaning the log files..."
 	rm -f *.vvp *.log *.vcd *.csv $(PROGRAMS_DIR)*.elf $(PROGRAMS_DIR)*.hex $(PROGRAMS_DIR)*.dis $(PROGRAMS_DIR)*.dump $(PROGRAMS_DIR)*.mem
 	riscv64-unknown-elf-gcc -march=rv32i -mabi=ilp32 -static -mcmodel=medany -fvisibility=hidden -nostdlib -nostartfiles -T $(PROGRAMS_DIR)linker.ld $(PROGRAMS_DIR)$(TEST).S -o $(PROGRAMS_DIR)$(TEST).elf
 	riscv64-unknown-elf-objdump -M no-aliases -M numeric -D $(PROGRAMS_DIR)$(TEST).elf > $(PROGRAMS_DIR)$(TEST).dis
