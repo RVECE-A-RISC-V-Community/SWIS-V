@@ -42,6 +42,7 @@ integer fd;
 assign o_rd_ack = ~rst_n ? 1'b0 : 1'b1;
 assign o_read_data = (rst_n & i_stb) ? {memory[i_addr+3],memory[i_addr+2],memory[i_addr+1],memory[i_addr]} : 32'd0;
 
+/*
 //only for simulation
 always @(posedge clk)
 begin
@@ -54,7 +55,8 @@ begin
     		$fdisplay(fd, "Data 0x%h Read from address 0x%h", {memory[i_addr+3],memory[i_addr+2],memory[i_addr+1],memory[i_addr]}, i_addr);
 		$fclose(fd);
 	end
-end 
+end
+/* 
 /*
 always @(*)
 begin
@@ -88,16 +90,16 @@ always @(posedge clk)
 begin
 	if(i_wr_en & rst_n) // if the write enable signal is high and reset is not pressed, write to the data memory
     	begin
-		fd = $fopen("data_memory.log","ab+");	
-		if( (i_addr & 2'b11) != 2'b00 ) begin
-			$display("\nDATA MEMORY: Address %h is not 4-byte aligned!",i_addr);
-		end 	
+	//	fd = $fopen("data_memory.log","ab+");	
+	//	if( (i_addr & 2'b11) != 2'b00 ) begin
+	//		$display("\nDATA MEMORY: Address %h is not 4-byte aligned!",i_addr);
+	//	end 	
 		memory[i_addr + 3] <= i_write_data[31:24];
 		memory[i_addr + 2] <= i_write_data[23:16];
 		memory[i_addr + 1] <= i_write_data[15:8];
 		memory[i_addr] <= i_write_data[7:0];
-		$fdisplay(fd, "Data 0x%h Written to the address 0x%h", i_write_data, i_addr);
-		$fclose(fd);
+	//	$fdisplay(fd, "Data 0x%h Written to the address 0x%h", i_write_data, i_addr);
+	//	$fclose(fd);
 	end
 end
 
