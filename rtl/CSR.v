@@ -1,36 +1,37 @@
-module rv32i_csr_single_stage_pipeline (
+`timescale 1ns / 1ps
+`default_nettype none
+`include "rtl/parameters.h"
+
+
+module CSR(
     input wire i_clk, 
     input wire i_rst_n,
+    // Interrupts
     input wire i_external_interrupt, 
     input wire i_software_interrupt, 
-    input wire i_timer_interrupt, 
+    // Exceptions
     input wire i_is_inst_illegal, 
     input wire i_is_ecall, 
     input wire i_is_ebreak, 
     input wire i_is_mret,
-    input wire[31:0] i_pc, 
-    output reg[31:0] o_return_address, 
-    output reg[31:0] o_trap_address, 
-    output reg o_go_to_trap_q, 
-    output reg o_return_from_trap_q, 
-    input wire i_ce, 
-    input wire i_stall
-);
-
-    // CSR addresses
-    localparam MVENDORID = 12'hF11,  
-               MARCHID = 12'hF12,
-               MIMPID = 12'hF13,
-               MHARTID = 12'hF14,
-               MSTATUS = 12'h300, 
-               MISA = 12'h301,
-               MIE = 12'h304,
-               MTVEC = 12'h305,
-               MSCRATCH = 12'h340, 
-               MEPC = 12'h341,
-               MCAUSE = 12'h342,
-               MTVAL = 12'h343,
-               MIP = 12'h344;
+    // Load/Store Misaligned
+    input wire[6:0] i_opcode, //opcode types
+    input wire[31:0] i_y, //y value from ALU (address used in load/store/jump/branch)
+    // CSR Instruction 
+    input wire[2:0] i_funct3, // CSR instruction operation
+    input wire[11:0] i_csr_index, // immediate value from decoder
+    input wire[31:0] i_imm, //unsigned immediate for immediate type of CSR instruction (new value to be stored to CSR)
+    input wire[31:0] i_rs1, //Source register 1 value (new value to be stored to CSR)
+    output reg[31:0] o_csr_out, //CSR value to be loaded to basereg 
+    // Trap-Handler 
+    input wire[31:0] i_pc, //Program Counter 
+    input wire writeback_change_pc, //high if writeback will issue change_pc (which will override this stage)
+    output reg[31:0] o_return_address, //mepc CSR
+    output reg[31:0] o_trap_address, //mtvec CSR
+    output reg o_go_to_trap_q, //high before going to trap (if exception/interrupt detected)
+    output reg o_return_from_trap_q, //high before returning from trap (via mret)
+    input wire i_minstret_inc, //increment minstret after executing an instruction
+    );
 
     // CSR registers
     reg [31:0] MVENDORID_reg;
