@@ -11,58 +11,54 @@
 #Start your program from here
 
 _start:
-	# Initialize registers
-	la t2, result     # store address
-	ori t0, zero, 1   # cnt = 1
-	ori a2, zero, 10  # ten = 10
-	ori a0, zero, 0   # out = 0
 
-loop:
-       la a0,15
-       la a1,25
-       la a4,3
+       li a0,15
+       li a1,25
+       li a4,3
        
        # instructions start here
        
        add a2,a0,a1
-       la a3,40
-  
+       li a3,40
+       bne a3,a2,fail
+       
+       
        
        sub a2,a0,a1
-       la a3,-10
-       
+       li a3,-10
+       bne a3,a2,fail
        
        or a2,a0,a1
-       la a3, 31
-       
+       li a3, 31
+       bne a3,a2,fail
        
        and a2,a0,a1
-       la  a3,9
-       
+       li   a3,9
+       bne a3,a2,fail
        
        xor a2,a0,a1
-       la a3, 22
-       
+       li  a3, 22
+       bne a3,a2,fail
        
        sll a2,a1,a4
-       la a3, 200
-       
+       li  a3, 200
+       bne a3,a2,fail
        
        srl a2,a0,a4
-       la a3, 1
-       
+       li a3, 1
+       bne a3,a2,fail
        
        sltu a2,a0,a1
-       la a3,1
-       
+       li a3,1
+       bne a3,a2,fail
        
        
        sra a2,a1,a4
-       la  a3, 3
-       
+       li  a3, 3
+       bne a3,a2,fail
        
        slt a2,a0,a1
-       la a3,1
+       li  a3,1
        bne a3,a2,fail
 
 

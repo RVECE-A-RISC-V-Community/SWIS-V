@@ -46,7 +46,7 @@ always @(*)
 			o_alu_ctrl = `SUB;
 		else if((is_func3 == `SRLI) & (is_func7 == 1'b0))
 			o_alu_ctrl = `SRL;
-		else if((is_func3 == `SRAI) & (is_func7 == 1'b0))
+		else if((is_func3 == `SRAI) & (is_func7 == 1'b1))
 			o_alu_ctrl = `SRA;
 		else if(is_func3 == `SLLI)
 			o_alu_ctrl = `SLL;
@@ -68,7 +68,7 @@ always @(*)
 			o_alu_ctrl = `ADD;
 		else if((is_func3 == `SRLI) & (is_func7 == 1'b0))
 			o_alu_ctrl = `SRL;
-		else if((is_func3 == `SRAI) & (is_func7 == 1'b0))
+		else if((is_func3 == `SRAI) & (is_func7 == 1'b1))
 			o_alu_ctrl = `SRA;
 		else if(is_func3 == `SLLI)
 			o_alu_ctrl = `SLL;
