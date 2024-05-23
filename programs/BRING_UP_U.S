@@ -31,9 +31,9 @@ test_aui1:
 	bne a0,a2,fail
 
 test_aui2:     
-	auipc a2,-8
+	auipc a2,8
 	la a0, test_aui2
-	addi a3,zero,-8
+	addi a3,zero,8
 	sll a3,a3,12
 	add a0,a0,a3
 

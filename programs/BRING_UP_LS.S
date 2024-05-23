@@ -29,18 +29,18 @@ _start:
        lw a3,0x0(t0)
        
        bne a3, a4,fail
- pass :
-    la t2, tohost
-    li a3, 1
-    sw a3, 0(t2)
-    j _start  
-    
 fail:
-    
-    la t2, tohost
-    li a3, 3
-    sw a3, 0(t2)
-    j fail
+	la t2, tohost
+	li a3, 3
+	sw a3, 0(t2)
+	1: j 1b # wait for termination
+	
+pass:
+	la t2, tohost
+	li a3, 1
+	sw a3, 0(t2)
+	1: j 1b # wait for termination
+	
 
 # Data Segment
 
