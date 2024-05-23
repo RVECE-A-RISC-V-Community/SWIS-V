@@ -56,9 +56,9 @@ geu:
 
 Branch_false: 
     li a0,15
-       li a1,25
+       li a1,15
        li a4,3  
-       li a3,25
+       li a3,21
        add a2,a1,a0
        li a5,-5 
        add a6, a4,a5
@@ -66,13 +66,13 @@ Branch_false:
         
   2:   bne a0,a1,unequalf 
        
-  3:   bge a2,a4 ,gf
+  3:   bge a4,a2 ,gf
        
-  4:   ble a4, a1,lf
+  4:   blt a2, a4,lf
       
-  5:   bltu a4,a5,leuf
+  5:   bltu a5,a4,leuf
        
-  6:   bgeu a6,a5,geuf
+  6:   bgeu a5,a6,geuf
        
   7:   j Jump_inst
   
@@ -102,8 +102,12 @@ geuf:
 
 
 Jump_inst:
-   jalr sp,jp
-  jp: beq sp,
+  la a1,jp
+  add a2,a1,0x12
+  jalr sp,a1,0x08
+  nop
+  nop
+  jp: beq sp,a2,j_pass
    
 
 
@@ -111,7 +115,7 @@ Jump_inst:
  
  
  j_pass:
-    j_back
+   j j_back
 
 
 fail:

@@ -14,7 +14,7 @@ init:
 		
 core: $(PROGRAMS_DIR)$(TEST).S $(PROGRAMS_DIR)$(TEST).dis
 	@echo "Dividing the memory file into instructon memory and data memory file"
-	python $(TOOLS_DIR)extract.py
+	python3.10 $(TOOLS_DIR)extract.py
 
 	@echo "Configuring RTL..."
 	DATA_MEM_ADDRESS=$$(grep -m 1 -oP '(?<=@)[0-9A-F]+' programs/memory.hex); \
@@ -38,13 +38,13 @@ core: $(PROGRAMS_DIR)$(TEST).S $(PROGRAMS_DIR)$(TEST).dis
 	spike -l --log-commits --log  spike.log --isa=rv32i $(PROGRAMS_DIR)$(TEST).elf
 	
 	@echo "Converting spike log to csv format..."
-	python tools/spike_log_to_trace_csv.py -f --log spike.log --csv spike.csv
+	python3.10 tools/spike_log_to_trace_csv.py -f --log spike.log --csv spike.csv
 	@echo "Converting ABI Names to Numeric Names in CSV file..."
-	python $(TOOLS_DIR)register_remapping.py 
+	python3.10 $(TOOLS_DIR)register_remapping.py 
 	
 	@echo "Comparing RTL and Spike Traces..."
 	rm -f compare.log
-	python $(TOOLS_DIR)compare.py
+	python3.10 $(TOOLS_DIR)compare.py
 	
 $(PROGRAMS_DIR)$(TEST).S:
 	@echo "Cleaning the log files..."
