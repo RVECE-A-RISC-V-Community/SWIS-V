@@ -101,12 +101,13 @@ module csr_ssm #(parameter OPCODE_WIDTH = 8,parameter TRAP_ADDRESS = 0)
 // the following declarations are equivalent to
 // wire opcode_store = (i_opcode == `STORE); ------> store,load, branch are some bit patterns
 // define LOAD    7'b0000011
-    wire opcode_store=i_opcode[`STORE];
-    wire opcode_load=i_opcode[`LOAD];
-    wire opcode_branch=i_opcode[`BRANCH];
-    wire opcode_jal=i_opcode[`JAL];
-    wire opcode_jalr=i_opcode[`JALR];
-    wire opcode_system=i_opcode[`SYSTEM];
+wire opcode_branch,opcode_jal,opcode_jalr,opcode_load,opcode_store,opcode_system;
+    assign opcode_store=i_opcode[`STORE];
+    assign opcode_load=i_opcode[`LOAD];
+    assign opcode_branch=i_opcode[`BRANCH];
+    assign opcode_jal=i_opcode[`JAL];
+    assign opcode_jalr=i_opcode[`JALR];
+    assign opcode_system= (i_opcode == `SYSTEM);
 
 
     reg[31:0] csr_in; //value to be stored to CSR
@@ -350,7 +351,7 @@ end
         go_to_trap = 0;
         return_from_trap = 0;
         
-        if(!i_rst_n) begin
+        if(i_rst_n) begin
              external_interrupt_pending =  mstatus_mie && mie_meie && (mip_meip); //machine_interrupt_enable + machine_external_interrupt_enable + machine_external_interrupt_pending must all be high
              software_interrupt_pending = mstatus_mie && mie_msie && mip_msip;  //machine_interrupt_enable + machine_software_interrupt_enable + machine_software_interrupt_pending must all be high
              
