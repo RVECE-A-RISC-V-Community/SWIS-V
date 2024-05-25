@@ -92,6 +92,10 @@ parameter TRAP_ADDRESS = 32'h00000000;
         
         $dumpfile("test_csr.vcd");
         $dumpvars(0,csr_ssm_tb);
+    end
+
+    initial
+    begin
         // Initialize inputs
         i_rst_n = 0;
         i_external_interrupt = 0;
@@ -109,10 +113,10 @@ parameter TRAP_ADDRESS = 32'h00000000;
         i_rs1 = 0;
         i_pc = 0;
         writeback_change_pc = 0;
+        i_opcode = 7'b1110011;
 
         // Apply reset
         #10 i_rst_n = 1; 
-        #10 i_opcode = 7'b1110011;
 
         // Test illegal instruction exception
         #10 i_is_inst_illegal = 1; //mcause code 2 mcause_init_bit 0 and isexception will be high
