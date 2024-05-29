@@ -90,7 +90,7 @@ parameter TRAP_ADDRESS = 32'h00000000;
     initial
      begin
         
-        $dumpfile("test_csr.vcd");
+        $dumpfile("waveform.vcd");
         $dumpvars(0,csr_ssm_tb);
     end
 
