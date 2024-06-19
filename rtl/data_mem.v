@@ -56,8 +56,7 @@ begin
 		$fclose(fd);
 	end
 end
-/* 
-/*
+
 always @(*)
 begin
 	if(~rst_n) 
