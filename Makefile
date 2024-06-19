@@ -21,7 +21,7 @@ core: $(PROGRAMS_DIR)$(TEST).S $(PROGRAMS_DIR)$(TEST).dis
 	
 	@echo "\033[34mDividing the memory file into instruction memory and data memory file\033[0m"
 
-	python3.10 $(TOOLS_DIR)extract.py
+	python $(TOOLS_DIR)extract.py
 
 	@echo " "
 	
@@ -48,13 +48,13 @@ core: $(PROGRAMS_DIR)$(TEST).S $(PROGRAMS_DIR)$(TEST).dis
 	spike -l --log-commits --log  spike.log --isa=rv32i $(PROGRAMS_DIR)$(TEST).elf
 	
 	@echo "\033[34mConverting spike log to csv format...\033[0m"
-	python3.10 tools/spike_log_to_trace_csv.py -f --log spike.log --csv spike.csv
+	python tools/spike_log_to_trace_csv.py -f --log spike.log --csv spike.csv
 	@echo "\033[34mConverting ABI Names to Numeric Names in CSV file...\033[0m"
-	python3.10 $(TOOLS_DIR)register_remapping.py 
+	python $(TOOLS_DIR)register_remapping.py 
 	
 	@echo "\033[34mComparing RTL and Spike Traces...\033[0m"
 	rm -f compare.log
-	python3.10 $(TOOLS_DIR)compare.py
+	python $(TOOLS_DIR)compare.py
 	
 $(PROGRAMS_DIR)$(TEST).S:
 	@echo "\033[34mCleaning the log files...\033[0m"
