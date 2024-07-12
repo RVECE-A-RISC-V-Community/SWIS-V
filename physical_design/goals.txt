@@ -1,0 +1,4 @@
+Physical Design Goals for the SWIS-V core
+-> Perform an initial RTL-GDS flow using skywater180nm PDK
+-> Find the Maximum and Minimum operating frequency of both synthesized-netlist and layout and compare the results
+-> Put all of these flow into the Makefile flow
